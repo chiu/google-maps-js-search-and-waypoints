@@ -57,7 +57,8 @@
     }
     </style>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
     <script>
     var rendererOptions = {
         draggable: true
@@ -70,7 +71,8 @@
 
     function initialize() {
 
-      var startlocation = jQuery("#startLocationInput").val();
+        // var startlocation = jQuery("#startLocationInput").val();
+        // console.log("start:", startlocation);
 
         var mapOptions = {
             zoom: 7,
@@ -84,15 +86,41 @@
             computeTotalDistance(directionsDisplay.getDirections());
         });
 
-        calcRoute();
+        // calcRoute();
     }
 
-    function calcRoute() {
+
+    function drawDirections() {
+
+        console.log("draw directions happened");
+
+        // var startlocation = $("#startLocationInput").val();
+        // console.log("start:", startlocation);
+
+        // var mapOptions = {
+        //     zoom: 7,
+        //     center: australia
+        // };
+        // // map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+        // directionsDisplay.setMap(map);
+        // directionsDisplay.setPanel(document.getElementById('directionsPanel'));
+
+        // google.maps.event.addListener(directionsDisplay, 'directions_changed', function() {
+        //     computeTotalDistance(directionsDisplay.getDirections());
+        // });
+
+        // calcRoute('Sydney, NSW', );
+        calcRoute('Sydney, NSW', 'Bourke, NSW');
+    }
+
+    function calcRoute(origin_argument, destination_argument) {
 
         var request = {
-            origin: 'Sydney, NSW',
+          origin: origin_argument,
+          destination: destination_argument,
+            // origin: 'Sydney, NSW',
             // origin: 'Melbourne, ',
-            destination: 'Melbourne, NSW',
+            // destination: 'Melbourne, NSW',
             // waypoints: [{
             //     location: 'Bourke, NSW'
             // }, {
@@ -116,15 +144,23 @@
         total = total / 1000.0;
         document.getElementById('total').innerHTML = total + ' km';
     }
+    // $(document).on("click", "awesomeButton",(drawDirections);
+
+    //    $(document).on("click","#awesomeButton",function() {
+    //     alert("click bound to document listening for #test-element");
+    // });
+
+         $(document).on("click","#awesomeButton", drawDirections);
 
     google.maps.event.addDomListener(window, 'load', initialize);
+
     </script>
 </head>
 
 <body>
     hi
     <input id="startLocationInput" type="text">
-    <button id="findLocation">Click me </button>
+    <button id="awesomeButton">Click me </button>
     <div id="map-canvas" style="float:left;width:70%; height:100%"></div>
     <div id="directionsPanel" style="float:right;width:30%;height 100%">
         <p>Total Distance: <span id="total"></span></p>
