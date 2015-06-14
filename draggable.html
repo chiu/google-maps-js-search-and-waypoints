@@ -57,8 +57,7 @@
     }
     </style>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script>
     var rendererOptions = {
         draggable: true
@@ -84,7 +83,13 @@
 
         google.maps.event.addListener(directionsDisplay, 'directions_changed', function() {
             computeTotalDistance(directionsDisplay.getDirections());
+              showWaypoints(directionsDisplay.getDirections());
+
         });
+
+
+
+
 
         // calcRoute();
     }
@@ -94,8 +99,12 @@
 
         console.log("draw directions happened");
 
-        // var startlocation = $("#startLocationInput").val();
-        // console.log("start:", startlocation);
+        var startlocation = $("#startLocationInput").val();
+        console.log("start:", startlocation);
+
+
+        var endlocation = $("#endLocationInput").val();
+        console.log("end:", endlocation);
 
         // var mapOptions = {
         //     zoom: 7,
@@ -110,22 +119,26 @@
         // });
 
         // calcRoute('Sydney, NSW', );
-        calcRoute('Sydney, NSW', 'Bourke, NSW');
+        // calcRoute('Sydney, NSW', 'Bourke, NSW');
+        calcRoute(startlocation, endlocation);
+
+
+
     }
 
     function calcRoute(origin_argument, destination_argument) {
 
         var request = {
-          origin: origin_argument,
-          destination: destination_argument,
+            origin: origin_argument,
+            destination: destination_argument,
             // origin: 'Sydney, NSW',
             // origin: 'Melbourne, ',
             // destination: 'Melbourne, NSW',
-            // waypoints: [{
-            //     location: 'Bourke, NSW'
-            // }, {
-            //     location: 'Broken Hill, NSW'
-            // }],
+            waypoints: [{
+                location: 'Vancouver, BC'
+            }, {
+                location: 'Richmond, BC'
+            }],
             travelMode: google.maps.TravelMode.DRIVING
         };
         directionsService.route(request, function(response, status) {
@@ -135,32 +148,46 @@
         });
     }
 
-    function computeTotalDistance(result) {
-        var total = 0;
+
+    function showWaypoints(result) {
         var myroute = result.routes[0];
         for (var i = 0; i < myroute.legs.length; i++) {
-            total += myroute.legs[i].distance.value;
+            // total += myroute.legs[i].distance.value;
+            console.log(myroute.legs[i]);
         }
-        total = total / 1000.0;
-        document.getElementById('total').innerHTML = total + ' km';
+
+
     }
-    // $(document).on("click", "awesomeButton",(drawDirections);
+
+    function computeTotalDistance(result) {
+            var total = 0;
+            var myroute = result.routes[0];
+            for (var i = 0; i < myroute.legs.length; i++) {
+                total += myroute.legs[i].distance.value;
+            }
+            total = total / 1000.0;
+            document.getElementById('total').innerHTML = total + ' km';
+        }
+        // $(document).on("click", "awesomeButton",(drawDirections);
 
     //    $(document).on("click","#awesomeButton",function() {
     //     alert("click bound to document listening for #test-element");
     // });
+    // retrieve routes.legs[0].start_address
 
-         $(document).on("click","#awesomeButton", drawDirections);
+
+    $(document).on("click", "#awesomeButton", drawDirections);
 
     google.maps.event.addDomListener(window, 'load', initialize);
-
     </script>
 </head>
 
 <body>
     hi
     <input id="startLocationInput" type="text">
+    <input id="endLocationInput" type="text">
     <button id="awesomeButton">Click me </button>
+    <button id="showWaypointButton"> show me the waypoints </button>
     <div id="map-canvas" style="float:left;width:70%; height:100%"></div>
     <div id="directionsPanel" style="float:right;width:30%;height 100%">
         <p>Total Distance: <span id="total"></span></p>
